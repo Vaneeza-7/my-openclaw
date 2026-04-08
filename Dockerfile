@@ -270,9 +270,10 @@ USER node
 #   - GET /healthz (liveness) and GET /readyz (readiness)
 #   - aliases: /health and /ready
 # For external access from host/ingress, override bind to "lan" and set auth.
-# Health check inside container (127.0.0.1 works internally)
+# Health check inside container (127.0.0.1 works internally)# Expose port for Render
+# Health check inside container
 HEALTHCHECK --interval=3m --timeout=10s --start-period=15s --retries=3 \
   CMD node -e "fetch('http://127.0.0.1:8080/healthz').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 
-# Start OpenClaw gateway binding to all interfaces
-CMD ["node", "openclaw.mjs", "gateway", "--allow-unconfigured", "--bind", "0.0.0.0", "--port", "8080"]
+# Start OpenClaw gateway binding to LAN (all interfaces)
+CMD ["node", "openclaw.mjs", "gateway", "--allow-unconfigured", "--bind", "lan", "--port", "8080"]
